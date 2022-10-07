@@ -1,6 +1,7 @@
 package com.star.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.star.config.handler.*;
 import com.star.service.MyUserDetailsServce;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -32,15 +33,20 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 
+/**
+ * @author liuxing
+ * @description spring security配置
+ */
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
-public class MySecurityConfig extends WebSecurityConfigurerAdapter {
+public class StarSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Resource
     private MyUserDetailsServce myUserDetailsServce;
 
     @Resource
     private StarFilterInvocationSecurityMetadataSource metadataSource;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -60,23 +66,19 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
+                .successHandler(new StarAuthenticationSuccessHandler())
+                .failureHandler(new StarAuthenticationFailureHandler())
                 .and()
-                .exceptionHandling().accessDeniedHandler(new AccessDeniedHandler() {
-            @Override
-            public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("status",401);
-                map.put("msg","用户无权限");
-                String value = new ObjectMapper().writeValueAsString(map);
-                response.setContentType("text/html; charset=utf-8");
-                response.getWriter().write(value);
-            }
-        })
+                .logout()
+                .logoutSuccessHandler(new StarLogoutSuccessHandler())
+                .and()
+                .exceptionHandling().accessDeniedHandler(new StarAccessDeniedHandler())
                 .and()
                 .csrf().disable()
                 .sessionManagement()
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(true)
+                .expiredSessionStrategy(new StarSessionInformationExpiredStrategy())
         ;
     }
 

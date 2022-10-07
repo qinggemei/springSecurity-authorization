@@ -15,6 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * @author liuxing
+ * @Description 授权
+ */
 @Component
 public class StarFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
     private final MenuService menuService;
@@ -26,6 +30,12 @@ public class StarFilterInvocationSecurityMetadataSource implements FilterInvocat
 
     AntPathMatcher antPathMatcher = new AntPathMatcher();
 
+
+    /**
+     * @param object
+     * @return
+     * @throws IllegalArgumentException
+     */
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
         final HttpServletRequest httpRequest = ((FilterInvocation) object).getHttpRequest();
@@ -37,8 +47,6 @@ public class StarFilterInvocationSecurityMetadataSource implements FilterInvocat
                 return SecurityConfig.createList(roles);
             }
         }
-
-
             return null;
     }
 
@@ -51,4 +59,6 @@ public class StarFilterInvocationSecurityMetadataSource implements FilterInvocat
     public boolean supports(Class<?> clazz) {
         return false;
     }
+
+
 }
