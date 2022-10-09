@@ -1,7 +1,7 @@
 package com.star.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.star.common.exception.KaptchaNotMatchException;
+import com.star.exception.KaptchaNotMatchException;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import java.util.Map;
  *
  * @author liuxing
  */
+
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     public static final String KAPTCHA_KEY = "kaptcha";//默认值
@@ -41,7 +43,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         //1.判断是否是 post 方式请求
-        if (!request.getMethod().equals(HttpMethod.POST)) {
+        if (!request.getMethod().equals("POST")) {
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
         //2.判断是否是 json 格式请求类型

@@ -1,4 +1,4 @@
-package com.star.common.exception;
+package com.star.exception;
 
 import lombok.Data;
 

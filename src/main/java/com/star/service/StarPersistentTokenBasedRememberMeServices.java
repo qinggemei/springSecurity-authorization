@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author liuxing
  */
 
+
 public class StarPersistentTokenBasedRememberMeServices extends PersistentTokenBasedRememberMeServices {
 
     public StarPersistentTokenBasedRememberMeServices(String key, UserDetailsService userDetailsService, PersistentTokenRepository tokenRepository) {

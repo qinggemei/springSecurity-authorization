@@ -21,6 +21,7 @@ import java.util.List;
  */
 @Component
 public class StarFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
+
     private final MenuService menuService;
 
     @Autowired
@@ -29,7 +30,6 @@ public class StarFilterInvocationSecurityMetadataSource implements FilterInvocat
     }
 
     AntPathMatcher antPathMatcher = new AntPathMatcher();
-
 
     /**
      * @param object

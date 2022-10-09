@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class    StarUserDetailsServce implements UserDetailsService , UserDetailsPasswordService {
+public class   StarUserDetailsServce implements UserDetailsService , UserDetailsPasswordService {
 
     @Resource
     private UserMapper userMapper;

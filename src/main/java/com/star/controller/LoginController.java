@@ -1,9 +1,11 @@
 package com.star.controller;
 
 import com.google.code.kaptcha.Producer;
+import com.star.common.ResultVo;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -17,15 +19,15 @@ import java.io.IOException;
  * @description
  * @create: 2022-10-07 23:47
  */
+@RestController
 public class LoginController {
-
 
 
     @Resource
     private Producer producer;
 
     @GetMapping("/vc.jpg")
-    public String getVerifyCode(HttpServletResponse response, HttpSession session) throws IOException {
+    public ResultVo getVerifyCode(HttpServletResponse response, HttpSession session) throws IOException {
         response.setContentType("image/png");
         // 生成验证码
         String code = producer.createText();
@@ -36,6 +38,6 @@ public class LoginController {
         FastByteArrayOutputStream fos = new FastByteArrayOutputStream();
         ImageIO.write(bi, "png", fos);
         // 生成base64
-        return Base64.encodeBase64String(fos.toByteArray());
+        return ResultVo.success(Base64.encodeBase64String(fos.toByteArray()));
     }
 }
