@@ -12,10 +12,12 @@ import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.UrlAuthorizationConfigurer;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -60,13 +62,18 @@ public class StarSecurityConfig extends WebSecurityConfigurerAdapter {
                     }
                 });
         http.authorizeHttpRequests()
-                .mvcMatchers("/admin", "/user", "/getInfo","/vc.jpg").permitAll()
+                .mvcMatchers().permitAll()
                 .anyRequest().authenticated()
+                .and()
+                .formLogin()
                 .and()
                 .logout()
                 .logoutSuccessHandler(new StarLogoutSuccessHandler())
                 .and()
-                .exceptionHandling().accessDeniedHandler(new StarAccessDeniedHandler())
+                .exceptionHandling()
+                // 后面在实现token登录后开启
+//                .authenticationEntryPoint(new StarAuthenticationEntryPoint())
+                .accessDeniedHandler(new StarAccessDeniedHandler())
                 .and()
                 .rememberMe()
                 .tokenRepository(persistentTokenRepository())
@@ -77,7 +84,8 @@ public class StarSecurityConfig extends WebSecurityConfigurerAdapter {
                 .maxSessionsPreventsLogin(true)
                 .expiredSessionStrategy(new StarSessionInformationExpiredStrategy())
         ;
-        http.addFilterAt(loginFilter(), UsernamePasswordAuthenticationFilter.class);
+        // 后面在实现token登录后开启
+//        http.addFilterAt(loginFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
@@ -135,5 +143,15 @@ public class StarSecurityConfig extends WebSecurityConfigurerAdapter {
                 UUID.randomUUID().toString()
                 , starUserDetailsServce
                 , new JdbcTokenRepositoryImpl());
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        // 不做访问限制的路径
+        web.ignoring().mvcMatchers(
+                "/admin", "/user", "/getInfo","/vc.jpg"
+                // 后面在实现token登录后开启
+//                ,"/swagger-ui/**","/swagger-resources/**","/api/**","/v3/**"
+        );
     }
 }

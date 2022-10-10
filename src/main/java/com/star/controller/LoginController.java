@@ -2,6 +2,8 @@ package com.star.controller;
 
 import com.google.code.kaptcha.Producer;
 import com.star.common.ResultVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,7 @@ import java.io.IOException;
  * @description
  * @create: 2022-10-07 23:47
  */
+@Api(tags = {"登录接口"})
 @RestController
 public class LoginController {
 
@@ -26,6 +29,7 @@ public class LoginController {
     @Resource
     private Producer producer;
 
+    @ApiOperation(value = "验证码")
     @GetMapping("/vc.jpg")
     public ResultVo getVerifyCode(HttpServletResponse response, HttpSession session) throws IOException {
         response.setContentType("image/png");
