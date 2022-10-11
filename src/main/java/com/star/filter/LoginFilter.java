@@ -39,9 +39,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         this.kaptcha = kaptcha;
     }
 
-    @SneakyThrows
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         //1.判断是否是 post 方式请求
         if (!request.getMethod().equals("POST")) {
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());

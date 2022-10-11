@@ -47,7 +47,6 @@ public class StarSecurityConfig extends WebSecurityConfigurerAdapter {
     private DataSource dataSource;
 
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
@@ -72,11 +71,10 @@ public class StarSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling()
                 // 后面在实现token登录后开启
-//                .authenticationEntryPoint(new StarAuthenticationEntryPoint())
+                .authenticationEntryPoint(new StarAuthenticationEntryPoint())
                 .accessDeniedHandler(new StarAccessDeniedHandler())
                 .and()
                 .rememberMe()
-                .tokenRepository(persistentTokenRepository())
                 .and()
                 .csrf().disable()
                 .sessionManagement()
@@ -85,7 +83,7 @@ public class StarSecurityConfig extends WebSecurityConfigurerAdapter {
                 .expiredSessionStrategy(new StarSessionInformationExpiredStrategy())
         ;
         // 后面在实现token登录后开启
-//        http.addFilterAt(loginFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(loginFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
@@ -110,7 +108,6 @@ public class StarSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-
     @Bean
     public LoginFilter loginFilter() throws Exception {
         LoginFilter loginFilter = new LoginFilter();
@@ -125,10 +122,11 @@ public class StarSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 持久化
+     *
      * @return
      */
     @Bean
-    public PersistentTokenRepository persistentTokenRepository(){
+    public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
         // 只需要没有表时设置为 true
         jdbcTokenRepository.setCreateTableOnStartup(false);
@@ -142,14 +140,14 @@ public class StarSecurityConfig extends WebSecurityConfigurerAdapter {
         return new StarPersistentTokenBasedRememberMeServices(
                 UUID.randomUUID().toString()
                 , starUserDetailsServce
-                , new JdbcTokenRepositoryImpl());
+                , persistentTokenRepository());
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         // 不做访问限制的路径
         web.ignoring().mvcMatchers(
-                "/admin", "/user", "/getInfo","/vc.jpg"
+                "/admin", "/user", "/getInfo", "/vc.jpg"
                 // 后面在实现token登录后开启
 //                ,"/swagger-ui/**","/swagger-resources/**","/api/**","/v3/**"
         );

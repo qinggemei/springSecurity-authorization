@@ -12,7 +12,7 @@ import java.util.Properties;
  * 验证码
  */
 @Configuration
-public class KaptchaConfig {
+public class StarKaptchaConfig {
     @Bean
     public Producer kaptcha() {
         Properties properties = new Properties();

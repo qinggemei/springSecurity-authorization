@@ -1,5 +1,6 @@
 package com.star.controller;
 
+import com.star.exception.KaptchaNotMatchException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -8,6 +9,9 @@ public class DemoController {
 
     @GetMapping("/admin")
     public String admin() {
+        if(true){
+            throw new KaptchaNotMatchException("验证码未匹配");
+        }
         return "admin ok";
     }
 

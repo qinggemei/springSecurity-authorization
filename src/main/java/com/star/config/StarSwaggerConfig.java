@@ -7,6 +7,7 @@ import org.springframework.boot.SpringBootVersion;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -32,7 +33,7 @@ import static java.util.Collections.singletonList;
 
 @Configuration
 @EnableOpenApi
-public class SwaggerConfig {
+public class StarSwaggerConfig {
     /**
      * 是否开启swagger，生产环境一般关闭，所以这里定义一个变量
      */
@@ -105,7 +106,7 @@ public class SwaggerConfig {
     }
 
     private ApiKey apiKey() {
-        return new ApiKey("mykey", "api_key", "header");
+        return new ApiKey("Cookie", "api_key", "header");
     }
 
     private SecurityContext securityContext() {
@@ -121,7 +122,8 @@ public class SwaggerConfig {
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
         return singletonList(
-                new SecurityReference("mykey", authorizationScopes));
+                new SecurityReference("Cookie", authorizationScopes));
     }
+
 }
 
